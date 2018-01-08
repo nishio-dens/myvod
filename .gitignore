@@ -21,3 +21,7 @@
 /yarn-error.log
 
 .byebug_history
+
+database.yml
+dev_database.yml
+config/settings.yml
