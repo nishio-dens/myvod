@@ -1,5 +1,3 @@
-require "digest/md5"
-
 class MezzanineImportService < BaseService
   BATCH_SIZE = 10
 
