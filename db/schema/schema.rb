@@ -1,3 +1,52 @@
+create_table :channels, default_charset: :utf8mb4, collate: :utf8mb4_unicode_ci do |t|
+  t.int :id, primary_key: true, extra: :auto_increment
+
+  t.varchar :chinachu_id, default: ""
+  t.varchar :name, default: ""
+  t.varchar :channel_type, default: ""
+  t.int :channel_number, null: true
+
+  t.datetime :created_at
+  t.datetime :updated_at
+end
+
+create_table :programs, default_charset: :utf8mb4, collate: :utf8mb4_unicode_ci do |t|
+  t.int :id, primary_key: true, extra: :auto_increment
+
+  t.varchar :name, limit: 512, default: ""
+  t.varchar :category, limit: 64, default: ""
+  t.int :channel_id, null: true
+
+  t.datetime :started_at, null: true
+  t.datetime :ended_at, null: true
+
+  t.datetime :created_at
+  t.datetime :updated_at
+
+  t.foreign_key :channel_id, reference: :channels, reference_column: :id
+end
+
+create_table :program_assets, default_charset: :utf8mb4, collate: :utf8mb4_unicode_ci do |t|
+  t.int :id, primary_key: true, extra: :auto_increment
+
+  t.varchar :chinachu_id, limit: 20, default: ""
+  t.varchar :name, limit: 512, default: ""
+  t.varchar :detail, limit: 4096, default: ""
+  t.int :episode_number, null: true
+
+  t.int :duration_seconds, default: 0
+  t.datetime :started_at, null: true
+  t.datetime :ended_at, null: true
+  t.int :mezzanine_video_id, null: true
+  t.int :transcoded_video_id, null: true
+
+  t.datetime :created_at
+  t.datetime :updated_at
+
+  t.foreign_key :mezzanine_video_id, reference: :videos, reference_column: :id
+  t.foreign_key :transcoded_video_id, reference: :videos, reference_column: :id
+end
+
 create_table :videos, default_charset: :utf8mb4, collate: :utf8mb4_unicode_ci do |t|
   t.int :id, primary_key: true, extra: :auto_increment
 
