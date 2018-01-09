@@ -20,4 +20,7 @@ class Program < ApplicationRecord
   # Scope
 
   # Methods
+  def anime?
+    self.category == "anime"
+  end
 end

@@ -1,8 +1,17 @@
+require "fileutils"
+
 class TranscodeVideoService < BaseService
-  CRF = 18
+  DEFAULT_CRF = 18
+  ANIME_CRF = 22
+  VIDEO_WIDTH_HEIGHT = "1280x720"
+  VIDEO_BITRATE = "1400k"
+  AUDIO_BITRATE = "128k"
 
   def execute(video)
     return if video.transcoding_status_id != TranscodingStatus::WAITING.id
+    video.update(transcoding_status_id: TranscodingStatus::TRANSCODING.id)
+
+    make_transcoded_video_dir(video)
     transcode!(video)
 
     transcoded_video = Video.new(
@@ -27,17 +36,25 @@ class TranscodeVideoService < BaseService
   private
 
   def transcode!(video)
-    tune = video.program&.category == "anime" ? "zerolatency,animation" : "zerolatency"
+    tune = video.program&.anime? ? "zerolatency,animation" : "zerolatency"
+    deinterlace_cmd = video.interlaced? ? "-flags +ilme+ildct -top -1 -deinterlace" : ""
+    crf = video.program&.anime? ? ANIME_CRF : DEFAULT_CRF
 
     ffmpeg_command = <<-EOS.strip_heredoc
-      ffmpeg -y -i "#{video.filepath}" -vcodec libx264 -preset veryfast \
-      -crf #{CRF} -tune #{tune} -movflags +faststart \
+      ffmpeg -y -i "#{video.filepath}" -s #{VIDEO_WIDTH_HEIGHT} -vcodec libx264 \
+      #{deinterlace_cmd} -b:v #{VIDEO_BITRATE} -profile:v main -preset veryfast \
+      -crf #{crf} -tune #{tune} -movflags +faststart \
+      -acodec aac -strict experimental -ab #{AUDIO_BITRATE} -ar 48000 \
       "#{transcoded_video_path(video)}"
     EOS
     `#{ffmpeg_command}`
   end
 
+  def make_transcoded_video_dir(video)
+    FileUtils.mkdir_p("#{Settings.transcoded_video_path}/#{video.program.name}")
+  end
+
   def transcoded_video_path(video)
-    "#{Settings.transcoded_video_path}/#{video.filename}.mp4"
+    "#{Settings.transcoded_video_path}/#{video.program.name}/#{video.filename}.mp4"
   end
 end

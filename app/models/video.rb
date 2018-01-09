@@ -41,6 +41,10 @@ class Video < ApplicationRecord
     video_streams.present? || audio_streams.present? || meta_streams.present?
   end
 
+  def interlaced?
+    self.video_streams.first.field_order.present?
+  end
+
   def transcode_failed?
     self.transcoding_status_id == TranscodingStatus::FAIL.id
   end
