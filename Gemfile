@@ -17,6 +17,7 @@ gem 'settingslogic'
 gem 'devise'
 gem 'ransack'
 gem 'oga'
+gem 'rest-client'
 
 gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'

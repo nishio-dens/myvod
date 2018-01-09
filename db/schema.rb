@@ -59,26 +59,23 @@ ActiveRecord::Schema.define(version: 0) do
 
   create_table "program_assets", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT" do |t|
     t.string "chinachu_id", limit: 20, default: "", null: false
+    t.integer "program_id", null: false
     t.string "name", limit: 512, default: "", null: false
-    t.string "detail", limit: 4096, default: "", null: false
+    t.string "short_description", limit: 4096, default: "", null: false
+    t.string "full_description", limit: 8192, default: "", null: false
     t.integer "episode_number"
     t.integer "duration_seconds", default: 0, null: false
     t.datetime "started_at"
     t.datetime "ended_at"
-    t.integer "mezzanine_video_id"
-    t.integer "transcoded_video_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["mezzanine_video_id"], name: "program_assets_mezzanine_video_id_fk"
-    t.index ["transcoded_video_id"], name: "program_assets_transcoded_video_id_fk"
+    t.index ["program_id"], name: "program_assets_program_id_fk"
   end
 
   create_table "programs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT" do |t|
     t.string "name", limit: 512, default: "", null: false
-    t.string "category", limit: 64, default: "", null: false
+    t.string "category", limit: 32, default: "", null: false
     t.integer "channel_id"
-    t.datetime "started_at"
-    t.datetime "ended_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["channel_id"], name: "programs_channel_id_fk"
@@ -116,6 +113,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   create_table "videos", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT" do |t|
     t.boolean "mezzanine", default: true, null: false
+    t.integer "program_asset_id"
     t.integer "transcoding_status_id", default: 0, null: false
     t.integer "transcoded_video_id"
     t.string "filename", null: false
@@ -124,14 +122,15 @@ ActiveRecord::Schema.define(version: 0) do
     t.boolean "removed", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["program_asset_id"], name: "videos_program_asset_id_fk"
     t.index ["transcoded_video_id"], name: "videos_transcoded_video_id_fk"
   end
 
   add_foreign_key "audio_streams", "videos", name: "audio_streams_video_id_fk"
   add_foreign_key "meta_streams", "videos", name: "meta_streams_video_id_fk"
-  add_foreign_key "program_assets", "videos", column: "mezzanine_video_id", name: "program_assets_mezzanine_video_id_fk"
-  add_foreign_key "program_assets", "videos", column: "transcoded_video_id", name: "program_assets_transcoded_video_id_fk"
+  add_foreign_key "program_assets", "programs", name: "program_assets_program_id_fk"
   add_foreign_key "programs", "channels", name: "programs_channel_id_fk"
   add_foreign_key "video_streams", "videos", name: "video_streams_video_id_fk"
+  add_foreign_key "videos", "program_assets", name: "videos_program_asset_id_fk"
   add_foreign_key "videos", "videos", column: "transcoded_video_id", name: "videos_transcoded_video_id_fk"
 end

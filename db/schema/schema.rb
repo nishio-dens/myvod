@@ -14,11 +14,8 @@ create_table :programs, default_charset: :utf8mb4, collate: :utf8mb4_unicode_ci 
   t.int :id, primary_key: true, extra: :auto_increment
 
   t.varchar :name, limit: 512, default: ""
-  t.varchar :category, limit: 64, default: ""
+  t.varchar :category, limit: 32, default: ""
   t.int :channel_id, null: true
-
-  t.datetime :started_at, null: true
-  t.datetime :ended_at, null: true
 
   t.datetime :created_at
   t.datetime :updated_at
@@ -30,27 +27,27 @@ create_table :program_assets, default_charset: :utf8mb4, collate: :utf8mb4_unico
   t.int :id, primary_key: true, extra: :auto_increment
 
   t.varchar :chinachu_id, limit: 20, default: ""
+  t.int :program_id
   t.varchar :name, limit: 512, default: ""
-  t.varchar :detail, limit: 4096, default: ""
+  t.varchar :short_description, limit: 4096, default: ""
+  t.varchar :full_description, limit: 8192, default: ""
   t.int :episode_number, null: true
 
   t.int :duration_seconds, default: 0
   t.datetime :started_at, null: true
   t.datetime :ended_at, null: true
-  t.int :mezzanine_video_id, null: true
-  t.int :transcoded_video_id, null: true
 
   t.datetime :created_at
   t.datetime :updated_at
 
-  t.foreign_key :mezzanine_video_id, reference: :videos, reference_column: :id
-  t.foreign_key :transcoded_video_id, reference: :videos, reference_column: :id
+  t.foreign_key :program_id, reference: :programs, reference_column: :id
 end
 
 create_table :videos, default_charset: :utf8mb4, collate: :utf8mb4_unicode_ci do |t|
   t.int :id, primary_key: true, extra: :auto_increment
 
   t.boolean :mezzanine, default: true
+  t.int :program_asset_id, null: true
   t.int :transcoding_status_id, default: 0
   t.int :transcoded_video_id, null: true
   t.varchar :filename
@@ -61,6 +58,7 @@ create_table :videos, default_charset: :utf8mb4, collate: :utf8mb4_unicode_ci do
   t.datetime :created_at
   t.datetime :updated_at
 
+  t.foreign_key :program_asset_id, reference: :program_assets, reference_column: :id
   t.foreign_key :transcoded_video_id, reference: :videos, reference_column: :id
 end
 

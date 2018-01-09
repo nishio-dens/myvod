@@ -25,3 +25,4 @@
 database.yml
 dev_database.yml
 config/settings.yml
+tags

@@ -1,5 +1,5 @@
 defaults: &defaults
-  mezzvideo_path: "/Volumes/Video02Archive/rawvideos"
+  chinachu_base_url: "http://localhost:20772"
 
 development:
   <<: *defaults
