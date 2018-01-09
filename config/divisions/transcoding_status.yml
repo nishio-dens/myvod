@@ -1,0 +1,8 @@
+- id: 0
+  type: waiting
+- id: 1
+  type: transcoding
+- id: 2
+  type: success
+- id: 9
+  type: fail

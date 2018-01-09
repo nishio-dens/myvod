@@ -137,6 +137,24 @@ create_table :meta_streams, default_charset: :utf8mb4, collate: :utf8mb4_unicode
   t.foreign_key :video_id, reference: :videos, reference_column: :id
 end
 
+create_table :delayed_jobs, comment: "Delayed Job" do |t|
+  t.int :id, primary_key: true, extra: 'auto_increment'
+  t.int :priority, default: 0, null: false
+  t.int :attempts, default: 0, null: false
+  t.text :handler
+  t.text :last_error, null: true
+  t.datetime :run_at, null: true
+  t.datetime :locked_at, null: true
+  t.datetime :failed_at, null: true
+  t.varchar :locked_by, null: true
+  t.varchar :queue, null: true
+
+  t.datetime :created_at, null: true
+  t.datetime :updated_at, null: true
+
+  t.index [:priority, :run_at], name: "delayed_jobs_priority"
+end
+
 create_table :schema_migrations, default_charset: :utf8mb4, collate: :utf8mb4_unicode_ci do |t|
   t.varchar :version, limit: 191
 

@@ -1,4 +1,4 @@
-class MezzanineImportService < BaseService
+class ImportMezzanineService < BaseService
   BATCH_SIZE = 10
 
   def execute
@@ -73,20 +73,7 @@ class MezzanineImportService < BaseService
   end
 
   def set_streams(videos)
-    results = videos.map do |video|
-      begin
-        ffprobe_command = "ffprobe -show_streams -print_format json \"#{video.filepath}\""
-        streams = JSON.parse(`#{ffprobe_command}`)
-
-        video = set_video_stream(streams, video)
-        video = set_audio_stream(streams, video)
-        video = set_meta_stream(streams, video)
-        video
-      rescue => e
-        Rails.logger.error(e)
-        nil
-      end
-    end
+    results = videos.map { |video| SetVideoStreamService.new.execute(video) }
 
     results.compact
   end
