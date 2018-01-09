@@ -21,9 +21,9 @@ class Video < ApplicationRecord
   # Relations
   belongs_to :program_asset, required: false
   has_one :program, through: :program_asset
-  has_many :video_streams
-  has_many :audio_streams
-  has_many :meta_streams
+  has_many :video_streams, dependent: :destroy
+  has_many :audio_streams, dependent: :destroy
+  has_many :meta_streams, dependent: :destroy
   belongs_to :transcoded_video, class_name: "Video", foreign_key: "transcoded_video_id", required: false
 
   belongs_to_active_hash :transcoding_status, class_name: 'TranscodingStatus'
@@ -31,9 +31,21 @@ class Video < ApplicationRecord
   # Validations
 
   # Scope
+  scope :transcoded, -> do
+    where(mezzanine: true, transcoding_status_id: TranscodingStatus::SUCCESS.id)
+  end
+
   scope :not_transcoded, -> do
     where(mezzanine: true, transcoding_status_id: TranscodingStatus::WAITING.id)
       .or(where(mezzanine: true, transcoding_status_id: TranscodingStatus::FAIL.id))
+  end
+
+  scope :mezzanine_active, -> do
+    where(mezzanine: true, removed: false)
+  end
+
+  scope :mezzanine_removed, -> do
+    where(mezzanine: true, removed: true)
   end
 
   # Methods
@@ -47,5 +59,16 @@ class Video < ApplicationRecord
 
   def transcode_failed?
     self.transcoding_status_id == TranscodingStatus::FAIL.id
+  end
+
+  def remove_mezzanine!
+    return unless self.mezzanine
+    return if self.removed
+
+    Rails.logger.info("Removed #{self.filepath}")
+    File.delete(self.filepath)
+    self.update(removed: true)
+  rescue => e
+    Rails.logger.error(e)
   end
 end
