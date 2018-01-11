@@ -22,10 +22,10 @@ gem 'delayed_job'
 gem 'delayed_job_active_record'
 gem 'daemons'
 gem 'active_hash'
-
-gem 'coffee-rails', '~> 4.2'
-gem 'turbolinks', '~> 5'
+gem 'webpacker', '~> 3.0'
+gem 'materialize-sass'
 gem 'jbuilder', '~> 2.5'
+gem 'jquery-rails'
 
 group :development, :test do
   gem 'capybara', '~> 2.13'
@@ -34,6 +34,8 @@ group :development, :test do
   gem 'rubocop'
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'rspec'
+  gem 'rspec-rails'
 end
 
 group :development do

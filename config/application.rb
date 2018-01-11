@@ -19,5 +19,17 @@ module Myvod
     config.autoload_paths += Dir["#{config.root}/lib/",
                                  "#{config.root}/services"]
 
+    config.generators do |g|
+      g.test_framework :rspec,
+                       fixtures: false,
+                       view_specs: false,
+                       helper_specs: false,
+                       routing_specs: false,
+                       controller_specs: true,
+                       request_specs: false
+      g.helper false
+      g.stylesheets false
+      g.javascripts false
+    end
   end
 end
