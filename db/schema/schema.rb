@@ -137,6 +137,20 @@ create_table :meta_streams, default_charset: :utf8mb4, collate: :utf8mb4_unicode
   t.foreign_key :video_id, reference: :videos, reference_column: :id
 end
 
+create_table :video_captures, default_charset: :utf8mb4, collate: :utf8mb4_unicode_ci do |t|
+  t.int :id, primary_key: true, extra: :auto_increment
+  t.int :video_id
+  t.varchar :filepath, default: ""
+  t.int :width, default: 0
+  t.int :height, default: 0
+  t.decimal :position, precision: 10, scale: 3, default: "0.000"
+
+  t.datetime :created_at
+  t.datetime :updated_at
+
+  t.foreign_key :video_id, reference: :videos, reference_column: :id
+end
+
 create_table :delayed_jobs, comment: "Delayed Job" do |t|
   t.int :id, primary_key: true, extra: 'auto_increment'
   t.int :priority, default: 0, null: false

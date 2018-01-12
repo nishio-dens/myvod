@@ -1,5 +1,7 @@
 defaults: &defaults
   chinachu_base_url: "http://localhost:20772"
+  transcoded_video_path: "/mnt/hd2/videos"
+  artfile_path: "/mnt/hd2/files"
 
 development:
   <<: *defaults

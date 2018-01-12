@@ -24,6 +24,7 @@ class Video < ApplicationRecord
   has_many :video_streams, dependent: :destroy
   has_many :audio_streams, dependent: :destroy
   has_many :meta_streams, dependent: :destroy
+  has_many :video_captures, dependent: :destroy
   belongs_to :transcoded_video, class_name: "Video", foreign_key: "transcoded_video_id", required: false
 
   belongs_to_active_hash :transcoding_status, class_name: 'TranscodingStatus'
@@ -32,12 +33,16 @@ class Video < ApplicationRecord
 
   # Scope
   scope :transcoded, -> do
-    where(mezzanine: true, transcoding_status_id: TranscodingStatus::SUCCESS.id)
+    where(transcoding_status_id: TranscodingStatus::SUCCESS.id)
   end
 
   scope :not_transcoded, -> do
-    where(mezzanine: true, transcoding_status_id: TranscodingStatus::WAITING.id)
-      .or(where(mezzanine: true, transcoding_status_id: TranscodingStatus::FAIL.id))
+    where(transcoding_status_id: TranscodingStatus::WAITING.id)
+      .or(where(transcoding_status_id: TranscodingStatus::FAIL.id))
+  end
+
+  scope :transcoded_videos, -> do
+    where(mezzanine: false)
   end
 
   scope :mezzanine_active, -> do
@@ -70,5 +75,9 @@ class Video < ApplicationRecord
     self.update(removed: true)
   rescue => e
     Rails.logger.error(e)
+  end
+
+  def primary_video_stream
+    self.video_streams.order(:index).first
   end
 end

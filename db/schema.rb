@@ -96,6 +96,17 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["channel_id"], name: "programs_channel_id_fk"
   end
 
+  create_table "video_captures", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT" do |t|
+    t.integer "video_id", null: false
+    t.string "filepath", default: "", null: false
+    t.integer "width", default: 0, null: false
+    t.integer "height", default: 0, null: false
+    t.decimal "position", precision: 10, scale: 3, default: "0.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["video_id"], name: "video_captures_video_id_fk"
+  end
+
   create_table "video_streams", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT" do |t|
     t.integer "video_id", null: false
     t.integer "index", default: 0, null: false
@@ -145,6 +156,7 @@ ActiveRecord::Schema.define(version: 0) do
   add_foreign_key "meta_streams", "videos", name: "meta_streams_video_id_fk"
   add_foreign_key "program_assets", "programs", name: "program_assets_program_id_fk"
   add_foreign_key "programs", "channels", name: "programs_channel_id_fk"
+  add_foreign_key "video_captures", "videos", name: "video_captures_video_id_fk"
   add_foreign_key "video_streams", "videos", name: "video_streams_video_id_fk"
   add_foreign_key "videos", "program_assets", name: "videos_program_asset_id_fk"
   add_foreign_key "videos", "videos", column: "transcoded_video_id", name: "videos_transcoded_video_id_fk"
