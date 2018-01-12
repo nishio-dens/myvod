@@ -21,4 +21,7 @@ class VideoCapture < ApplicationRecord
   # Scopes
 
   # Methods
+  def url
+    URI.escape("#{Settings.storage_base_url}#{filepath}")
+  end
 end

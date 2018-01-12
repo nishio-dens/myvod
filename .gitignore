@@ -29,3 +29,6 @@ tags
 /public/entries
 /public/entries-test
 /node_modules
+
+# for your storage
+/public/storage

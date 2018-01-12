@@ -80,4 +80,8 @@ class Video < ApplicationRecord
   def primary_video_stream
     self.video_streams.order(:index).first
   end
+
+  def url
+    URI.escape("#{Settings.storage_base_url}#{filepath}")
+  end
 end
