@@ -1,3 +1,3 @@
-# MyVOD
+# myVOD
 
 for myself

@@ -9,7 +9,7 @@ export class AppNavbar extends React.Component {
           <div className="nav-wrapper">
             <div className="col s12">
               <ul className="left">
-                <li> <Link to="/" className="navbar__brand">MyVOD</Link> </li>
+                <li> <Link to="/" className="navbar__brand">myVOD</Link> </li>
                 <li> <Link to="/watching">Watching</Link> </li>
                 <li> <Link to="/new_arrivals">New Arrivals</Link> </li>
                 <li> <Link to="/tv_shows">TV Shows</Link> </li>
