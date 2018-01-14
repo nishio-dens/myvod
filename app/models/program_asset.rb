@@ -25,6 +25,12 @@ class ProgramAsset < ApplicationRecord
   # Validations
 
   # Scope
+  scope :publishable_assets, -> do
+    joins(:transcoded_video).distinct
+  end
+
+  # Delegates
+  delegate :primary_capture, to: :transcoded_video, allow_nil: true
 
   # Methods
 end

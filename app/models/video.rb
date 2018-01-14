@@ -84,4 +84,8 @@ class Video < ApplicationRecord
   def url
     URI.escape("#{Settings.storage_base_url}#{filepath}")
   end
+
+  def primary_capture
+    self.video_captures.first
+  end
 end
