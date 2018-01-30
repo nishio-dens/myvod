@@ -2,7 +2,7 @@ json.(asset,
   :id, :chinachu_id, :program_id, :name, :short_description, :full_description,
   :episode_number, :duration_seconds, :started_at, :ended_at, :created_at, :updated_at
 )
-json.set!(:capture_url, asset.primary_capture&.url)
+json.set!(:capture_url, asset.primary_capture&.url || "/images/no_images.png")
 
 json.set!(:program_name, asset.program.name)
 json.set!(:category, asset.program.category)

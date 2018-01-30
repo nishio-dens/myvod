@@ -14,8 +14,9 @@ class Program < ApplicationRecord
   # Relations
   belongs_to :channel, required: false
   has_many :program_assets
-  has_many :mezzanine_videos, -> { where(mezzanine: true) }, through: :program_assets
-  has_many :transcoded_videos, -> { where(mezzanine: false) }, through: :program_assets
+  has_many :mezzanine_videos, -> { where(mezzanine: true) }, class_name: "Video", through: :program_assets
+  has_many :transcoded_videos, -> { where(mezzanine: false) }, class_name: "Video", through: :program_assets
+  has_many :transcoded_video_captures, class_name: "VideoCapture", through: :transcoded_videos, source: :video_captures
 
   # Validations
 
@@ -33,5 +34,9 @@ class Program < ApplicationRecord
                       self.mezzanine_videos.transcoded
                     end
     target_videos.each(&:remove_mezzanine!)
+  end
+
+  def video_capture_url
+    self.transcoded_video_captures.first&.url
   end
 end
